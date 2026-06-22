@@ -14,7 +14,7 @@ Attacks can feed `AttackSourceId`, `AttackDefinitionId`, and `AttackSourceSnapsh
 
 ## World Spawning
 
-Use `IProjectileSpawner` to adapt pooled spawn/despawn behavior. Keep the adapter in a game or integration assembly if it must construct Encounters-backed `SpawnRequest` values.
+Use `WorldSpawnProjectileSpawner` to launch projectile objects through `WorldSpawnService` with generic `WorldSpawnRequest` values. Projectiles does not require Encounters.
 
 ## Defense Games
 

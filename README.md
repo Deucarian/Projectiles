@@ -10,8 +10,9 @@ The package intentionally does not own weapons, cooldowns, targeting, physics hi
 - `com.deucarian.combat`
 - `com.deucarian.attacks`
 - `com.deucarian.world-navigation`
+- `com.deucarian.world-spawning`
 
-World Spawning composition is adapter-owned because its current spawn entry point consumes Encounters requests. This package avoids an Encounters runtime dependency.
+Projectiles uses World Spawning directly through generic `WorldSpawnRequest` values. It still has no Encounters dependency.
 
 ## Minimal Flow
 

@@ -6,6 +6,7 @@ using Deucarian.Attacks;
 using Deucarian.Combat;
 using Deucarian.GameplayFoundation;
 using Deucarian.WorldNavigation;
+using Deucarian.WorldSpawning;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -156,7 +157,7 @@ namespace Deucarian.Projectiles.Tests
         public void WorldNavigationAdapterMovesProjectileObject()
         {
             var catalog = new CombatCatalog(new[] { new DamageTypeDefinition(Physical) });
-            var definition = new ProjectileDefinition(ArrowId, new ContentId("arrow.prefab"), Physical, 10, 30, 10);
+            var definition = new ProjectileDefinition(ArrowId, new WorldSpawnableId("arrow.prefab"), Physical, 10, 30, 10);
             using var spawner = new FakeSpawner();
             var navigation = new WorldNavigationService();
             var runtime = new ProjectileRuntime(catalog, new[] { definition }, spawner, new WorldNavigationProjectileNavigator(navigation));
@@ -188,9 +189,9 @@ namespace Deucarian.Projectiles.Tests
         [Test]
         public void InvalidNumericInputIsRejected()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectileDefinition(ArrowId, new ContentId("arrow.prefab"), Physical, 1, 1, float.NaN));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectileDefinition(ArrowId, new ContentId("arrow.prefab"), Physical, -1, 1, 1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectileDefinition(ArrowId, new ContentId("arrow.prefab"), Physical, 1, 0, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectileDefinition(ArrowId, new WorldSpawnableId("arrow.prefab"), Physical, 1, 1, float.NaN));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectileDefinition(ArrowId, new WorldSpawnableId("arrow.prefab"), Physical, -1, 1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ProjectileDefinition(ArrowId, new WorldSpawnableId("arrow.prefab"), Physical, 1, 0, 1));
         }
 
         [Test]
@@ -198,12 +199,12 @@ namespace Deucarian.Projectiles.Tests
         {
             string path = "C:/Repositories/Deucarian/Projectiles-TestProject/Projectiles-Benchmark.txt";
             int[] counts = { 1000, 5000, 10000 };
-            var lines = new List<string> { "Unity 6000.3.5f1; fake pooled prefab: one empty GameObject; operation: launch, one navigation tick, impact, cleanup/expiry." };
+            var lines = new List<string> { "Unity 6000.3.5f1; fake pooled prefab: one empty GameObject; operation: launch, manual impact, cleanup/expiry; allocation method: GC.GetAllocatedBytesForCurrentThread in Unity EditMode batch." };
             for (int c = 0; c < counts.Length; c++)
             {
                 using Fixture fixture = new Fixture(lifetimeTicks: 1000, maxImpacts: 1);
                 var sw = Stopwatch.StartNew();
-                long before = Profiler.GetMonoUsedSizeLong();
+                long before = GC.GetAllocatedBytesForCurrentThread();
                 for (int i = 0; i < counts[c]; i++)
                 {
                     ProjectileLaunchResult launch = fixture.Runtime.Launch(fixture.Request(destination: new Vector3(i + 1, 0, 0)));
@@ -211,9 +212,9 @@ namespace Deucarian.Projectiles.Tests
                     ProjectileImpactResult impact = fixture.Runtime.ReportImpact(new ProjectileImpactRequest(launch.ProjectileId, target.Id, target));
                     Assert.That(impact.Succeeded, Is.True);
                 }
-                long after = Profiler.GetMonoUsedSizeLong();
+                long after = GC.GetAllocatedBytesForCurrentThread();
                 sw.Stop();
-                lines.Add($"{counts[c]} cycles: {sw.ElapsedMilliseconds} ms, mono delta {after - before} bytes, spawned {fixture.Spawner.SpawnCount}, despawned {fixture.Spawner.DespawnReasons.Count}");
+                lines.Add($"{counts[c]} cycles: {sw.ElapsedMilliseconds} ms, allocated {after - before} bytes, spawned {fixture.Spawner.SpawnCount}, despawned {fixture.Spawner.DespawnReasons.Count}");
             }
             File.WriteAllLines(path, lines);
             Assert.That(File.Exists(path), Is.True);
@@ -233,9 +234,25 @@ namespace Deucarian.Projectiles.Tests
         }
 
         [Test]
-        public void WorldSpawningIntegrationRemainsAdapterOwned()
+        public void ProjectileLaunchUsesGenericWorldSpawnRequestWithoutEncounters()
         {
-            Assert.Pass("Projectiles runtime uses IProjectileSpawner so World Spawning can be composed without adding an Encounters runtime dependency.");
+            GameObject prefab = new GameObject("projectile-prefab");
+            var spawnable = new WorldSpawnableId("arrow.prefab");
+            var channel = new WorldSpawnChannelId("projectiles");
+            using var spawn = new WorldSpawnService(
+                new SpawnableCatalog(new[] { new SpawnableDefinition(spawnable, new GameObjectPrefabProvider(prefab), 1, 2) }),
+                new ChannelPoseResolver(new Dictionary<WorldSpawnChannelId, SpawnPose> { [channel] = new SpawnPose(Vector3.zero, Quaternion.identity) }));
+            spawn.Warmup();
+            var catalog = new CombatCatalog(new[] { new DamageTypeDefinition(Physical) });
+            var definition = new ProjectileDefinition(ArrowId, spawnable, Physical, 10, 5, 4);
+            var navigator = new FakeNavigator();
+            var runtime = new ProjectileRuntime(catalog, new[] { definition }, new WorldSpawnProjectileSpawner(spawn, channel), navigator);
+            ProjectileLaunchResult launch = runtime.Launch(new ProjectileLaunchRequest(ArrowId, new AttackSourceId("tower"), new AttackDefinitionId("shot"), new AttackSourceSnapshot(new AttackSourceId("tower"), new CombatantId("tower.combatant")), Vector3.zero, Vector3.forward));
+            Assert.That(launch.Succeeded, Is.True);
+            Assert.That(spawn.ActiveCount, Is.EqualTo(1));
+            runtime.Tick(5);
+            Assert.That(spawn.ActiveCount, Is.EqualTo(0));
+            UnityEngine.Object.DestroyImmediate(prefab);
         }
 
         [Test]
@@ -257,7 +274,7 @@ namespace Deucarian.Projectiles.Tests
             public Fixture(int lifetimeTicks = 10, int maxImpacts = 1)
             {
                 Catalog = new CombatCatalog(new[] { new DamageTypeDefinition(Physical) });
-                Definitions = new[] { new ProjectileDefinition(ArrowId, new ContentId("arrow.prefab"), Physical, 10, lifetimeTicks, 4, maxImpacts) };
+                Definitions = new[] { new ProjectileDefinition(ArrowId, new WorldSpawnableId("arrow.prefab"), Physical, 10, lifetimeTicks, 4, maxImpacts) };
                 Spawner = new FakeSpawner();
                 Navigator = new FakeNavigator();
                 Runtime = new ProjectileRuntime(Catalog, Definitions, Spawner, Navigator);

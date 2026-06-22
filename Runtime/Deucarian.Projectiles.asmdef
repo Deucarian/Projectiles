@@ -5,7 +5,8 @@
     "Deucarian.GameplayFoundation",
     "Deucarian.Combat",
     "Deucarian.Attacks",
-    "Deucarian.WorldNavigation"
+    "Deucarian.WorldNavigation",
+    "Deucarian.WorldSpawning"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

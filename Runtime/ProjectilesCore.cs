@@ -4,6 +4,7 @@ using Deucarian.Attacks;
 using Deucarian.Combat;
 using Deucarian.GameplayFoundation;
 using Deucarian.WorldNavigation;
+using Deucarian.WorldSpawning;
 using UnityEngine;
 
 namespace Deucarian.Projectiles
@@ -53,7 +54,7 @@ namespace Deucarian.Projectiles
     /// <summary>Authored projectile data that remains weapon-agnostic.</summary>
     public sealed class ProjectileDefinition
     {
-        public ProjectileDefinition(ProjectileDefinitionId id, ContentId spawnableId, DamageTypeId damageTypeId, double baseDamage, int lifetimeTicks, float speed, int maxImpacts = 1)
+        public ProjectileDefinition(ProjectileDefinitionId id, WorldSpawnableId spawnableId, DamageTypeId damageTypeId, double baseDamage, int lifetimeTicks, float speed, int maxImpacts = 1)
         {
             if (id.IsEmpty) throw new ArgumentException("Projectile definition id cannot be empty.", nameof(id));
             if (spawnableId.IsEmpty) throw new ArgumentException("Spawnable id cannot be empty.", nameof(spawnableId));
@@ -65,7 +66,7 @@ namespace Deucarian.Projectiles
             Id = id; SpawnableId = spawnableId; DamageTypeId = damageTypeId; BaseDamage = baseDamage; LifetimeTicks = lifetimeTicks; Speed = speed; MaxImpacts = maxImpacts;
         }
         public ProjectileDefinitionId Id { get; }
-        public ContentId SpawnableId { get; }
+        public WorldSpawnableId SpawnableId { get; }
         public DamageTypeId DamageTypeId { get; }
         public double BaseDamage { get; }
         public int LifetimeTicks { get; }
@@ -107,6 +108,43 @@ namespace Deucarian.Projectiles
     {
         ProjectileSpawnResult Spawn(ProjectileDefinition definition, ProjectileLaunchRequest request);
         void Despawn(ProjectileSpawnHandle handle, ProjectileExpiryReason reason);
+    }
+
+    /// <summary>World Spawning adapter for projectile object creation and cleanup.</summary>
+    public sealed class WorldSpawnProjectileSpawner : IProjectileSpawner
+    {
+        private readonly WorldSpawnService _service;
+        private readonly WorldSpawnChannelId _channelId;
+        private long _nextSequence;
+        public WorldSpawnProjectileSpawner(WorldSpawnService service, WorldSpawnChannelId channelId)
+        {
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+            if (channelId.IsEmpty) throw new ArgumentException("Channel id cannot be empty.", nameof(channelId));
+            _channelId = channelId;
+        }
+        public ProjectileSpawnResult Spawn(ProjectileDefinition definition, ProjectileLaunchRequest request)
+        {
+            if (definition == null) return new ProjectileSpawnResult(false, default, null);
+            var worldRequest = new WorldSpawnRequest(
+                definition.SpawnableId,
+                _channelId,
+                ++_nextSequence,
+                new WorldSpawnRequestContext("projectiles", groupId: request.AttackSourceId.Value, waveId: request.AttackDefinitionId.Value));
+            SpawnResult result = _service.Spawn(worldRequest);
+            return result.Succeeded ? new ProjectileSpawnResult(true, new ProjectileSpawnHandle(result.InstanceId.Value), result.Instance) : new ProjectileSpawnResult(false, default, null);
+        }
+        public void Despawn(ProjectileSpawnHandle handle, ProjectileExpiryReason reason)
+        {
+            if (handle.Value <= 0) return;
+            _service.Despawn(new SpawnInstanceId(handle.Value), Map(reason));
+        }
+        private static DespawnReason Map(ProjectileExpiryReason reason)
+        {
+            return reason == ProjectileExpiryReason.HitLimitReached ? DespawnReason.Completed :
+                reason == ProjectileExpiryReason.NavigationFailed ? DespawnReason.Clear :
+                reason == ProjectileExpiryReason.ManualCleanup ? DespawnReason.Requested :
+                DespawnReason.OutOfBounds;
+        }
     }
 
     public readonly struct ProjectileNavigationResult

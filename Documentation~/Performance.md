@@ -2,12 +2,12 @@
 
 Measured in `C:\Repositories\Deucarian\Projectiles-TestProject` with Unity `6000.3.5f1`.
 
-Benchmark setup: fake pooled prefab represented by one empty `GameObject`; operation per cycle was launch, navigation start, manual impact, and cleanup by hit-limit expiry.
+Benchmark setup: fake pooled prefab represented by one empty `GameObject`; operation per cycle was launch, manual impact, and cleanup by hit-limit expiry. Allocation method is `GC.GetAllocatedBytesForCurrentThread` in Unity EditMode batch.
 
-| Cycles | Elapsed | Mono Delta | Spawned | Despawned |
+| Cycles | Elapsed | Allocated | Spawned | Despawned |
 | ---: | ---: | ---: | ---: | ---: |
-| 1,000 | 27 ms | -126,976 bytes | 1,000 | 1,000 |
-| 5,000 | 113 ms | 1,572,864 bytes | 5,000 | 5,000 |
-| 10,000 | 244 ms | 884,736 bytes | 10,000 | 10,000 |
+| 1,000 | 25 ms | 0 bytes | 1,000 | 1,000 |
+| 5,000 | 105 ms | 0 bytes | 5,000 | 5,000 |
+| 10,000 | 201 ms | 0 bytes | 10,000 | 10,000 |
 
-The zero-tick steady-state allocation test after warm-up passed with less than 64 KiB mono delta for 256 representative evaluations. The benchmark still allocates because it creates test `GameObject` instances and test combat target IDs.
+These values are more reliable than Mono heap deltas, but still reflect Unity EditMode batch behavior and the fake adapter path. They are not a blanket allocation-free claim for all production adapters.

@@ -9,7 +9,7 @@ Namespace: `Deucarian.Projectiles`
 - Snapshots: `ProjectileRecordSnapshot`, `ProjectileSnapshot`
 - Runtime: `ProjectileRuntime`
 - Adapters: `IProjectileSpawner`, `IProjectileNavigator`, `IProjectileDamageRequestFactory`
-- Provided integration: `WorldNavigationProjectileNavigator`, `ProjectileDamageRequestFactory`
+- Provided integration: `WorldSpawnProjectileSpawner`, `WorldNavigationProjectileNavigator`, `ProjectileDamageRequestFactory`
 
 `ProjectileRuntime` owns active projectile lifecycle only. It does not discover collisions. A physics, tower lane, idle battle, or donor adapter reports impacts by calling `ReportImpact`.
 

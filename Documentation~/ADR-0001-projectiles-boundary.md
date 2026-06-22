@@ -8,9 +8,9 @@ Projectiles does not own weapons, cooldowns, target discovery, physics overlap/r
 
 ## Dependencies
 
-Runtime depends on Gameplay Foundation, Attacks, Combat, and World Navigation. It does not depend on Defense Games, Encounters, Progression, Persistence, UI packages, Core State, service locators, global mutable state, or Entities.
+Runtime depends on Gameplay Foundation, Attacks, Combat, World Spawning, and World Navigation. It does not depend on Defense Games, Encounters, Progression, Persistence, UI packages, Core State, service locators, global mutable state, or Entities.
 
-World Spawning integration is represented through `IProjectileSpawner`. The current World Spawning public API consumes Encounters `SpawnRequest`, so a direct runtime adapter would introduce an Encounters dependency. That boundary is left to game/adapter assemblies.
+World Spawning integration uses generic `WorldSpawnRequest` values through `WorldSpawnProjectileSpawner`, so Projectiles can spawn objects directly without an Encounters dependency.
 
 ## Consequences
 
