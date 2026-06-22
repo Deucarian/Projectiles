@@ -1,0 +1,23 @@
+{
+  "name": "Deucarian.Projectiles.Tests",
+  "rootNamespace": "Deucarian.Projectiles.Tests",
+  "references": [
+    "Deucarian.Projectiles",
+    "Deucarian.GameplayFoundation",
+    "Deucarian.Combat",
+    "Deucarian.Attacks",
+    "Deucarian.WorldNavigation",
+    "Deucarian.WorldSpawning",
+    "Deucarian.DefenseGames"
+  ],
+  "includePlatforms": [ "Editor" ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [ "UNITY_INCLUDE_TESTS" ],
+  "versionDefines": [],
+  "optionalUnityReferences": [ "TestAssemblies" ],
+  "noEngineReferences": false
+}
