@@ -1,0 +1,24 @@
+{
+  "packageId": "com.deucarian.projectiles",
+  "displayName": "Deucarian Projectiles",
+  "ownedCapabilities": [],
+  "runtimeAssemblies": [
+    "Deucarian.Projectiles"
+  ],
+  "editorAssemblies": [],
+  "sampleAssemblies": [],
+  "testAssemblies": [
+    "Deucarian.Projectiles.Tests"
+  ],
+  "requiredDependencies": [
+    "com.deucarian.gameplay-foundation",
+    "com.deucarian.combat",
+    "com.deucarian.attacks",
+    "com.deucarian.world-navigation",
+    "com.deucarian.world-spawning"
+  ],
+  "optionalVersionDefinedDependencies": [],
+  "allowedDirectDebugCalls": [],
+  "allowedDirectUnityObjectLifetimeCalls": [],
+  "expectedSamplesRoot": "Samples~"
+}
