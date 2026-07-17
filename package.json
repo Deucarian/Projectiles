@@ -1,6 +1,6 @@
 {
   "name": "com.deucarian.projectiles",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "displayName": "Deucarian Projectiles",
   "description": "Generic projectile launch, movement, lifetime, impact, and cleanup foundations for Deucarian games.",
   "unity": "6000.3",
@@ -13,11 +13,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "com.deucarian.gameplay-foundation": "0.1.0",
-    "com.deucarian.combat": "0.1.0",
-    "com.deucarian.attacks": "0.1.0",
-    "com.deucarian.world-navigation": "0.1.0",
-    "com.deucarian.world-spawning": "0.2.0"
+    "com.deucarian.gameplay-foundation": "0.1.1",
+    "com.deucarian.combat": "0.1.1",
+    "com.deucarian.attacks": "0.1.1",
+    "com.deucarian.world-navigation": "0.1.1",
+    "com.deucarian.world-spawning": "0.2.1"
   },
   "samples": [
     {
