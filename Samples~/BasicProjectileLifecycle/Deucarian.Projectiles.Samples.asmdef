@@ -1,0 +1,21 @@
+{
+  "name": "Deucarian.Projectiles.Samples",
+  "rootNamespace": "Deucarian.Projectiles.Samples",
+  "references": [
+    "Deucarian.Projectiles",
+    "Deucarian.Attacks",
+    "Deucarian.Combat",
+    "Deucarian.GameplayFoundation",
+    "Deucarian.WorldNavigation",
+    "Deucarian.WorldSpawning"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

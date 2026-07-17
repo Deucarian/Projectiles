@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-07-17
+
+- Aligned package metadata and the playable sample with the portfolio contract; direct Deucarian dependencies now use the coordinated patch versions.
+
 ## 0.2.0
 
 - Added direct World Spawning integration through `WorldSpawnProjectileSpawner`.

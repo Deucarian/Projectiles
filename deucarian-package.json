@@ -1,12 +1,15 @@
 {
   "packageId": "com.deucarian.projectiles",
   "displayName": "Deucarian Projectiles",
+  "samplePolicy": "playable-scene",
   "ownedCapabilities": [],
   "runtimeAssemblies": [
     "Deucarian.Projectiles"
   ],
   "editorAssemblies": [],
-  "sampleAssemblies": [],
+  "sampleAssemblies": [
+    "Deucarian.Projectiles.Samples"
+  ],
   "testAssemblies": [
     "Deucarian.Projectiles.Tests"
   ],
