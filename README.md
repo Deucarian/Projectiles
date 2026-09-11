@@ -1,5 +1,7 @@
 # Deucarian Projectiles
 
+For simple calls and setup, see [Simple usage](Documentation~/SimpleUsage.md).
+
 `com.deucarian.projectiles` provides generic projectile launch, movement, lifetime, manual impact reporting, Combat request creation, and cleanup.
 
 The package intentionally does not own weapons, cooldowns, targeting, physics hit discovery, damage math, rewards, persistence, UI, VFX, audio, pathfinding, placement, encounters, or ECS. Games or adapters report impacts into the runtime.
