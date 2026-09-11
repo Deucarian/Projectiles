@@ -1,0 +1,19 @@
+{
+  "name": "Deucarian.Projectiles.Editor",
+  "rootNamespace": "Deucarian.Projectiles.Editor",
+  "references": [
+    "Deucarian.Projectiles",
+    "Deucarian.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

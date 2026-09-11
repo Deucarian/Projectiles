@@ -19,6 +19,26 @@ namespace Deucarian.Projectiles.Tests
         private static readonly ProjectileDefinitionId ArrowId = new ProjectileDefinitionId("arrow");
 
         [Test]
+        public void EmitterCapturesConfiguredContextAndRejectsZeroDirection()
+        {
+            using Fixture fixture = new Fixture();
+            var go = new GameObject("emitter");
+            try
+            {
+                go.transform.position = new Vector3(3, 0, 0);
+                var emitter = go.AddComponent<ProjectileEmitter>();
+                emitter.Configure(fixture.Runtime, () => fixture.Source, new AttackDefinitionId("basic.attack"), 10);
+                Assert.That(emitter.Fire(new EmitterArrowKey(), Vector3.zero).FailureReason, Is.EqualTo(ProjectileLaunchFailureReason.InvalidInput));
+                var result = emitter.Fire(new EmitterArrowKey(), new Vector3(0, 0, 2));
+                Assert.That(result.Succeeded, Is.True);
+                Assert.That(fixture.Spawner.LastInstance.transform.position, Is.EqualTo(go.transform.position));
+                Assert.That(fixture.Navigator.LastDestination, Is.EqualTo(new Vector3(3, 0, 10)));
+                Assert.That(fixture.Runtime.ActiveCount, Is.EqualTo(1));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(go); }
+        }
+
+        [Test]
         public void LaunchSucceedsAndRegistersMovement()
         {
             using Fixture fixture = new Fixture(maxImpacts: 2);
@@ -197,7 +217,7 @@ namespace Deucarian.Projectiles.Tests
         [Test]
         public void BenchmarksLaunchMoveImpactCleanupCycles()
         {
-            string path = "C:/Repositories/Deucarian/Projectiles-TestProject/Projectiles-Benchmark.txt";
+            string path = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Library", "Projectiles-Benchmark.txt"));
             int[] counts = { 1000, 5000, 10000 };
             var lines = new List<string> { "Unity 6000.3.5f1; fake pooled prefab: one empty GameObject; operation: launch, manual impact, cleanup/expiry; allocation method: GC.GetAllocatedBytesForCurrentThread in Unity EditMode batch." };
             for (int c = 0; c < counts.Length; c++)
@@ -320,12 +340,14 @@ namespace Deucarian.Projectiles.Tests
             private long _next;
             public bool Fail;
             public bool LastUsedPath;
+            public Vector3 LastDestination;
             public int StartCount;
             public int StopCount;
             public ProjectileNavigationResult Start(GameObject instance, ProjectileDefinition definition, ProjectileLaunchRequest request)
             {
                 StartCount++;
                 LastUsedPath = request.UsesPath;
+                LastDestination = request.Destination;
                 return Fail ? new ProjectileNavigationResult(false, default) : new ProjectileNavigationResult(true, new MovementAgentId(++_next));
             }
             public void Stop(MovementAgentId agentId) { StopCount++; }
