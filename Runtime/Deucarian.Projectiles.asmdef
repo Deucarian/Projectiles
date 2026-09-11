@@ -2,9 +2,11 @@
   "name": "Deucarian.Projectiles",
   "rootNamespace": "Deucarian.Projectiles",
   "references": [
+    "Deucarian.Combat.Unity",
     "Deucarian.GameplayFoundation",
     "Deucarian.Combat",
     "Deucarian.Attacks",
+    "Deucarian.Attacks.Authoring",
     "Deucarian.WorldNavigation",
     "Deucarian.WorldSpawning"
   ],

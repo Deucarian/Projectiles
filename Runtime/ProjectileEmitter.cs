@@ -1,5 +1,7 @@
 using System;
 using Deucarian.Attacks;
+using Deucarian.Attacks.Authoring;
+using Deucarian.Combat.Unity;
 using UnityEngine;
 
 namespace Deucarian.Projectiles
@@ -10,10 +12,21 @@ namespace Deucarian.Projectiles
     {
         [SerializeField] private Transform origin;
         [SerializeField, Min(0.001f)] private float travelDistance = 100f;
+        [SerializeField] private ProjectileHost scope;
+        [SerializeField] private Combatant sourceActor;
+        [SerializeField] private AttackKey attack;
         private ProjectileRuntime runtime;
         private Func<AttackSourceSnapshot> captureSource;
         private AttackDefinitionId attackDefinition;
         private bool destroyed;
+
+        private void Awake()
+        {
+            if (scope == null || runtime != null) return;
+            if (sourceActor == null || attack == null) throw new InvalidOperationException("Select an attack and assign the source Combatant on ProjectileEmitter.");
+            var id = new AttackSourceId(Guid.NewGuid().ToString("N"));
+            Configure(scope.Runtime, () => new AttackSourceSnapshot(id, sourceActor.Handle.Id, sourceActor.isActiveAndEnabled), new AttackDefinitionId(attack.Id), travelDistance);
+        }
 
         public void Configure(ProjectileRuntime projectileRuntime, Func<AttackSourceSnapshot> source,
             AttackDefinitionId attack, float distance = 100f)
