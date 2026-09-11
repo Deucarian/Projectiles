@@ -6,7 +6,9 @@
   "runtimeAssemblies": [
     "Deucarian.Projectiles"
   ],
-  "editorAssemblies": [],
+  "editorAssemblies": [
+    "Deucarian.Projectiles.Editor"
+  ],
   "sampleAssemblies": [
     "Deucarian.Projectiles.Samples"
   ],
@@ -14,9 +16,10 @@
     "Deucarian.Projectiles.Tests"
   ],
   "requiredDependencies": [
-    "com.deucarian.gameplay-foundation",
-    "com.deucarian.combat",
     "com.deucarian.attacks",
+    "com.deucarian.combat",
+    "com.deucarian.editor",
+    "com.deucarian.gameplay-foundation",
     "com.deucarian.world-navigation",
     "com.deucarian.world-spawning"
   ],

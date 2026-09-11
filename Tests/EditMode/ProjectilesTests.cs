@@ -28,8 +28,8 @@ namespace Deucarian.Projectiles.Tests
                 go.transform.position = new Vector3(3, 0, 0);
                 var emitter = go.AddComponent<ProjectileEmitter>();
                 emitter.Configure(fixture.Runtime, () => fixture.Source, new AttackDefinitionId("basic.attack"), 10);
-                Assert.That(emitter.Fire("arrow", Vector3.zero).FailureReason, Is.EqualTo(ProjectileLaunchFailureReason.InvalidInput));
-                var result = emitter.Fire("arrow", new Vector3(0, 0, 2));
+                Assert.That(emitter.Fire(new EmitterArrowKey(), Vector3.zero).FailureReason, Is.EqualTo(ProjectileLaunchFailureReason.InvalidInput));
+                var result = emitter.Fire(new EmitterArrowKey(), new Vector3(0, 0, 2));
                 Assert.That(result.Succeeded, Is.True);
                 Assert.That(fixture.Spawner.LastInstance.transform.position, Is.EqualTo(go.transform.position));
                 Assert.That(fixture.Navigator.LastDestination, Is.EqualTo(new Vector3(3, 0, 10)));

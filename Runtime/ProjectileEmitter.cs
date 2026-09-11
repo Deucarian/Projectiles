@@ -30,8 +30,9 @@ namespace Deucarian.Projectiles
             travelDistance = distance;
         }
 
-        public ProjectileLaunchResult Fire(string id, Vector3 direction)
+        public ProjectileLaunchResult Fire(ProjectileKey projectile, Vector3 direction)
         {
+            if (projectile == null) throw new ArgumentNullException(nameof(projectile), "Select a ProjectileKey or pass a named projectile definition.");
             if (destroyed) throw new ObjectDisposedException(nameof(ProjectileEmitter));
             if (runtime == null) throw new InvalidOperationException("Configure the projectile emitter first.");
             float magnitude = direction.sqrMagnitude;
@@ -41,7 +42,7 @@ namespace Deucarian.Projectiles
             if (source.Id.IsEmpty || !source.Enabled)
                 return new ProjectileLaunchResult(false, ProjectileLaunchFailureReason.InvalidInput, default);
             Vector3 position = (origin != null ? origin : transform).position;
-            return runtime.Launch(new ProjectileLaunchRequest(new ProjectileDefinitionId(id), source.Id,
+            return runtime.Launch(new ProjectileLaunchRequest(new ProjectileDefinitionId(projectile.Id), source.Id,
                 attackDefinition, source, position, position + direction.normalized * travelDistance));
         }
         private void OnDestroy() { destroyed = true; runtime = null; captureSource = null; }

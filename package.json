@@ -17,7 +17,8 @@
     "com.deucarian.combat": "0.1.1",
     "com.deucarian.attacks": "0.1.1",
     "com.deucarian.world-navigation": "0.1.1",
-    "com.deucarian.world-spawning": "0.2.1"
+    "com.deucarian.world-spawning": "0.2.1",
+    "com.deucarian.editor": "1.10.8"
   },
   "samples": [
     {
