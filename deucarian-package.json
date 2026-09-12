@@ -10,18 +10,20 @@
     "Deucarian.Projectiles.Editor"
   ],
   "sampleAssemblies": [
-    "Deucarian.Projectiles.Samples"
+    "Deucarian.Projectiles.Samples",
+    "Deucarian.Projectiles.Samples.DefinitionWorkflow",
+    "Deucarian.Samples.Projectiles.DefinitionDeclarations"
   ],
   "testAssemblies": [
     "Deucarian.Projectiles.Tests"
   ],
   "requiredDependencies": [
-    "com.deucarian.attacks",
-    "com.deucarian.combat",
-    "com.deucarian.editor",
     "com.deucarian.gameplay-foundation",
+    "com.deucarian.combat",
+    "com.deucarian.attacks",
     "com.deucarian.world-navigation",
-    "com.deucarian.world-spawning"
+    "com.deucarian.world-spawning",
+    "com.deucarian.editor"
   ],
   "optionalVersionDefinedDependencies": [],
   "allowedDirectDebugCalls": [],

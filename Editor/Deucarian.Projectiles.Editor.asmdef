@@ -2,6 +2,9 @@
   "name": "Deucarian.Projectiles.Editor",
   "rootNamespace": "Deucarian.Projectiles.Editor",
   "references": [
+    "Deucarian.Combat",
+    "Deucarian.Combat.Unity",
+    "Deucarian.WorldSpawning",
     "Deucarian.Projectiles",
     "Deucarian.Editor"
   ],

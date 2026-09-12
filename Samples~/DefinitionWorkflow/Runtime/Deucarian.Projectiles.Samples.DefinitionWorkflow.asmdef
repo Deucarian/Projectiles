@@ -1,0 +1,6 @@
+{
+  "name": "Deucarian.Projectiles.Samples.DefinitionWorkflow",
+  "references": [
+    "Deucarian.Projectiles"
+  ]
+}
