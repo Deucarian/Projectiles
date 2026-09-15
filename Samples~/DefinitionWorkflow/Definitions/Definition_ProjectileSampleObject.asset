@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2595e7a0aa68e644293825d2bccc0438, type: 3}
+  m_Name: Definition_ProjectileSampleObject
+  m_EditorClassIdentifier: Deucarian.WorldSpawning::Deucarian.WorldSpawning.Unity.SpawnableDefinitionAsset
+  id: 96eb35454c8e46d7b066ac230748b4e9
+  displayName: ProjectileSampleObject
+  prefab: {fileID: 8700050694185670597, guid: 2761d27cae6b8014aa7f870297ea2003, type: 3}
+  initialCapacity: 0
+  maximumCapacity: 64

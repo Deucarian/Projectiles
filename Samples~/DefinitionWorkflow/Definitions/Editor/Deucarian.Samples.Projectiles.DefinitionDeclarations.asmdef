@@ -1,0 +1,5 @@
+{
+  "name": "Deucarian.Samples.Projectiles.DefinitionDeclarations",
+  "references": ["Deucarian.Attacks.Authoring", "Deucarian.Attacks.Editor", "Deucarian.Combat", "Deucarian.Combat.Editor", "Deucarian.Combat.Unity", "Deucarian.Editor", "Deucarian.Projectiles.Editor", "Deucarian.WorldSpawning", "Deucarian.WorldSpawning.Editor"],
+  "includePlatforms": ["Editor"]
+}
